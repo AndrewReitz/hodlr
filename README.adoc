@@ -1,0 +1,92 @@
+= hodlr
+
+A dollar-cost average automation for crypto assets.
+hodlr allows you to set it and for get it with your crypto assets, no need to worry about buying the dip or
+selling at the high point. Just hodl hodl hodl.
+
+Currently hodlr only supports the use of coinbase, but more exchanges could be added in the future. Also, because
+I can only test using USD, this currently only works with USD, but it would not be difficult to add more currencies
+(pull requests welcome).
+
+== Usage
+
+Java is required on the system. You my get a warning about illegal reflective access if you're using
+Java 9+. This will be resolved when the application can be compiled using Graal's native image instead.
+
+Most basic configuration file will look something like
+
+```
+coinbase {
+    passphrase = "coinbasePassphrase"
+    secret = "SecretFromCoinbase"
+    key = "keyFromCoinbase"
+}
+
+recurring-purchase {
+    frequency = daily
+    day = 1
+    account = "7122b49d-b636-4a8a-a304-dcdab5465025" // get this by running `hodlr accounts`
+    amount = 100
+    assets-to-purchase = {
+        "btc" : 100
+    }
+}
+```
+
+1. Get a api key, secret, and passphrase from coinbase pro. https://pro.coinbase.com/profile/api
+1. Place apk key, secret, and passphrase into a configuration file like the example above.
+1. Configure recurring-purchase section of the configuration file. Leaving account set to any
+value or empty string.
+1. Run `hodlr accounts` and choose the account you want to deposit money from. Copy this id
+and set this to the `recurring-purchase.account` value in the configuration file.
+1. Run `holdr --config=myConfig.conf run` and forget about it.
+
+See `sample.conf` for all available options.
+
+== Other information
+
+All scheduled times are meant to happen at midnight the computer it's executing on's time. This may be
+changed in the future to be a config option.
+
+Configuration are HOCON files using https://github.com/lightbend/config[TypeSafe config]
+
+If hodlr is placed on a laptop that is put to sleep it will attempt to run the last deposit that it missed.
+For example if daily deposits are setup and the computer is put to sleep for 3 days when it awakes it will
+make a single deposit, the one that was scheduled to occur the day the computer was shutdown.
+
+Purchases happen automatically when assets are available in the account that is configured in the
+config file. That means if you move assets in there manually the program can and will purchase
+things. This is due to the difficulties in keeping track of the deposits
+being completed and then purchasing with them. If you want to make purchases by hand stop the
+hodlr program!
+
+Please try this out in sandbox mode before moving to production, although this app has a full test
+suit and I have been using it both in sandbox mode and in production, that doesn't mean there
+aren't possibilities for there to be bugs I have not found or you setting up weird configurations
+that I didn't expect. You are responsible for your own actions.
+
+Don't have a Coinbase account? Get one here https://www.coinbase.com/join/reitz_b and
+help support development of this app.
+
+BTC: 38mJrfh1WTHExZYj9FJUuGczudSFfbLEmj
+XMR: 8BcFZwVMSQ78UbQgj5MyMZ5Ty6AoKDJ4QfqweC7B2hqoiwpcq8MmhXd59UWSoxYF3BJc2Yr73GutgJq1VR39SwajCFNepXm
+ETC: 0x1113C9F2D4e773D9ae478b98F009cdC4F286d344
+BAT: 0x275b22E0879FdABfe8b3775B31182a9072D1676A
+USDC: 0xC2a2Ec63F878aF33A0c8F357B7bF670fdc3B2400
+
+== License
+
+Copyright 2019 Andrew Reitz
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
+persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
+Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
