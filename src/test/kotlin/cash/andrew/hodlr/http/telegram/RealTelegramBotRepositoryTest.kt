@@ -1,6 +1,5 @@
 package cash.andrew.hodlr.http.telegram
 
-import cash.andrew.hodlr.DO_NOTHING_LOGGER
 import cash.andrew.hodlr.config.TelegramConfig
 import cash.andrew.hodlr.http.telegram.model.BotApiResponse
 import cash.andrew.hodlr.http.telegram.model.Chat
@@ -12,8 +11,6 @@ import cash.andrew.hodlr.stub
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldEqual
-import org.amshove.kluent.shouldEqualTo
 import org.junit.jupiter.api.Test
 import java.io.IOException
 import java.time.Instant
@@ -71,7 +68,7 @@ class RealTelegramBotRepositoryTest {
     val service = object : TelegramBotService by stub() {
       override suspend fun getUpdates(token: String, offset: Long, timeout: Long, allowedUpdates: String): BotApiResponse {
         token shouldBeEqualTo telegramConfig.apiToken
-        offset shouldEqualTo messageOffset
+        offset shouldBeEqualTo messageOffset
 
         val returnVal = args.removeAt(0)
 
@@ -101,13 +98,13 @@ class RealTelegramBotRepositoryTest {
 
   @Test
   @ExperimentalCoroutinesApi
-  fun `should produce messages from telegram bot api and continue on if there is an error`() = runBlocking<Unit> {
+  fun `should produce messages from telegram bot api and continue on if there is an error`() = runBlocking {
     var messageOffset = 0L
 
     val service = object : TelegramBotService by stub() {
       override suspend fun getUpdates(token: String, offset: Long, timeout: Long, allowedUpdates: String): BotApiResponse {
         token shouldBeEqualTo telegramConfig.apiToken
-        offset shouldEqualTo ++messageOffset
+        offset shouldBeEqualTo ++messageOffset
 
         if (messageOffset % 2 == 0L) {
           throw IOException("Oh know!")
@@ -141,44 +138,44 @@ class RealTelegramBotRepositoryTest {
 
   @Test
   fun `should send a message to telegram bot api`() = runBlocking<Unit> {
-    val expectedMessage = "This is what space smells like "
+      val expectedMessage = "This is what space smells like "
 
-    val service = object : TelegramBotService by stub() {
-      override suspend fun sendMessage(token: String, chatId: Long, message: String): Any {
-        token shouldBeEqualTo telegramConfig.apiToken
-        chatId shouldEqualTo telegramConfig.userId
-        message shouldBeEqualTo expectedMessage
-        return Unit
+      val service = object : TelegramBotService by stub() {
+          override suspend fun sendMessage(token: String, chatId: Long, message: String): Any {
+              token shouldBeEqualTo telegramConfig.apiToken
+              chatId shouldBeEqualTo telegramConfig.userId
+              message shouldBeEqualTo expectedMessage
+              return Unit
+          }
       }
-    }
 
-    val classUnderTest = RealTelegramBotRepository(
-        telegramConfig = telegramConfig,
-        service = service,
-        logger = ConsoleLogger(LogLevel.DEBUG)
-    )
+      val classUnderTest = RealTelegramBotRepository(
+          telegramConfig = telegramConfig,
+          service = service,
+          logger = ConsoleLogger(LogLevel.DEBUG)
+      )
 
-    val result = classUnderTest.sendMessage(expectedMessage)
-    result shouldEqual SendMessageSuccess
+      val result = classUnderTest.sendMessage(expectedMessage)
+      result shouldBeEqualTo SendMessageSuccess
   }
 
   @Test
   fun `should return an error when send message telegram bot api has an error`() = runBlocking<Unit> {
-    val expectedException = IOException("You will always remember where you were")
+      val expectedException = IOException("You will always remember where you were")
 
-    val service = object : TelegramBotService by stub() {
-      override suspend fun sendMessage(token: String, chatId: Long, message: String): Any {
-        throw expectedException
+      val service = object : TelegramBotService by stub() {
+          override suspend fun sendMessage(token: String, chatId: Long, message: String): Any {
+              throw expectedException
+          }
       }
-    }
 
-    val classUnderTest = RealTelegramBotRepository(
-        telegramConfig = telegramConfig,
-        service = service,
-        logger = ConsoleLogger(LogLevel.DEBUG)
-    )
+      val classUnderTest = RealTelegramBotRepository(
+          telegramConfig = telegramConfig,
+          service = service,
+          logger = ConsoleLogger(LogLevel.DEBUG)
+      )
 
-    val result = classUnderTest.sendMessage("My thoughts are frozen")
-    result shouldEqual SendMessageFailure(expectedException)
+      val result = classUnderTest.sendMessage("My thoughts are frozen")
+      result shouldBeEqualTo SendMessageFailure(expectedException)
   }
 }

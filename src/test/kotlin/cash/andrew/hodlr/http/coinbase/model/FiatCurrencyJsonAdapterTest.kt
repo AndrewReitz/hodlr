@@ -2,7 +2,6 @@ package cash.andrew.hodlr.http.coinbase.model
 
 import cash.andrew.hodlr.DO_NOTHING_LOGGER
 import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldEqual
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
@@ -21,7 +20,7 @@ class FiatCurrencyJsonAdapterTest {
 
   @Test
   fun fromJson() {
-    classUnderTest.fromJson("USD") shouldEqual FiatCurrency.USD
-    classUnderTest.fromJson("BAT") shouldEqual FiatCurrency.UNSUPPORTED
+    classUnderTest.fromJson("USD") shouldBeEqualTo FiatCurrency.USD
+    classUnderTest.fromJson("BAT") shouldBeEqualTo FiatCurrency.UNSUPPORTED
   }
 }

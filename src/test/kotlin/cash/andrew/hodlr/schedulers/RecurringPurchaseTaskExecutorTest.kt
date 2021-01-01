@@ -21,7 +21,6 @@ import cash.andrew.hodlr.stub
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldEqual
 import org.junit.jupiter.api.Test
 import java.io.IOException
 import java.math.BigDecimal
@@ -33,100 +32,100 @@ class RecurringPurchaseTaskExecutorTest : OutputStreamTest() {
   @Test
   fun `should return an account on successful network call and account balance is greater than 0`() = runBlockingTest {
 
-    val expected = Account(
-        id = "id",
-        currency = FiatCurrency.USD,
-        balance = 100.toBigDecimal(),
-        available = 100.toBigDecimal(),
-        hold = 0.toBigDecimal(),
-        profileId = "profileId"
-    )
+      val expected = Account(
+          id = "id",
+          currency = FiatCurrency.USD,
+          balance = 100.toBigDecimal(),
+          available = 100.toBigDecimal(),
+          hold = 0.toBigDecimal(),
+          profileId = "profileId"
+      )
 
-    val config = RecurringPurchaseConfig(
-        frequency = Frequency.daily,
-        account = "mine",
-        currency = FiatCurrency.USD,
-        amount = 100.toBigDecimal(),
-        assetsToPurchase = mapOf(
-            CryptoCurrency.ETH to 100.toBigDecimal()
-        )
-    )
+      val config = RecurringPurchaseConfig(
+          frequency = Frequency.daily,
+          account = "mine",
+          currency = FiatCurrency.USD,
+          amount = 100.toBigDecimal(),
+          assetsToPurchase = mapOf(
+              CryptoCurrency.ETH to 100.toBigDecimal()
+          )
+      )
 
-    val coinbaseRepository = object : CoinbaseRepository by stub() {
-      override suspend fun getAccounts() = AccountSuccess(listOf(expected))
-    }
+      val coinbaseRepository = object : CoinbaseRepository by stub() {
+          override suspend fun getAccounts() = AccountSuccess(listOf(expected))
+      }
 
-    val classUnderTest = RecurringPurchaseTaskExecutor(
-        config = config,
-        logger = DO_NOTHING_LOGGER,
-        coinbaseRepository = coinbaseRepository
-    )
+      val classUnderTest = RecurringPurchaseTaskExecutor(
+          config = config,
+          logger = DO_NOTHING_LOGGER,
+          coinbaseRepository = coinbaseRepository
+      )
 
-    val result = classUnderTest.getAccountToUse()
-    result shouldEqual expected
+      val result = classUnderTest.getAccountToUse()
+      result shouldBeEqualTo expected
   }
 
   @Test
   fun `should return an null when there is a 0 account balance`() = runBlockingTest {
-    val config = RecurringPurchaseConfig(
-        frequency = Frequency.daily,
-        account = "mine",
-        currency = FiatCurrency.USD,
-        amount = 100.toBigDecimal(),
-        assetsToPurchase = mapOf(
-            CryptoCurrency.ETH to 100.toBigDecimal()
-        )
-    )
-
-    val coinbaseRepository = object : CoinbaseRepository by stub() {
-      override suspend fun getAccounts() = AccountSuccess(
-          listOf(
-              Account(
-                  id = "id",
-                  currency = FiatCurrency.USD,
-                  balance = 0.toBigDecimal(),
-                  available = 0.toBigDecimal(),
-                  hold = 0.toBigDecimal(),
-                  profileId = "profileId"
-              )
+      val config = RecurringPurchaseConfig(
+          frequency = Frequency.daily,
+          account = "mine",
+          currency = FiatCurrency.USD,
+          amount = 100.toBigDecimal(),
+          assetsToPurchase = mapOf(
+              CryptoCurrency.ETH to 100.toBigDecimal()
           )
       )
-    }
 
-    val classUnderTest = RecurringPurchaseTaskExecutor(
-        config = config,
-        logger = DO_NOTHING_LOGGER,
-        coinbaseRepository = coinbaseRepository
-    )
+      val coinbaseRepository = object : CoinbaseRepository by stub() {
+          override suspend fun getAccounts() = AccountSuccess(
+              listOf(
+                  Account(
+                      id = "id",
+                      currency = FiatCurrency.USD,
+                      balance = 0.toBigDecimal(),
+                      available = 0.toBigDecimal(),
+                      hold = 0.toBigDecimal(),
+                      profileId = "profileId"
+                  )
+              )
+          )
+      }
 
-    val result = classUnderTest.getAccountToUse()
-    result shouldEqual null
+      val classUnderTest = RecurringPurchaseTaskExecutor(
+          config = config,
+          logger = DO_NOTHING_LOGGER,
+          coinbaseRepository = coinbaseRepository
+      )
+
+      val result = classUnderTest.getAccountToUse()
+      result shouldBeEqualTo null
   }
 
   @Test
   fun `should return null when there is an error loading accounts`() = runBlockingTest {
-    val config = RecurringPurchaseConfig(
-        frequency = Frequency.daily,
-        account = "mine",
-        currency = FiatCurrency.USD,
-        amount = 100.toBigDecimal(),
-        assetsToPurchase = mapOf(
-            CryptoCurrency.ETH to 100.toBigDecimal()
-        )
-    )
+      val config = RecurringPurchaseConfig(
+          frequency = Frequency.daily,
+          account = "mine",
+          currency = FiatCurrency.USD,
+          amount = 100.toBigDecimal(),
+          assetsToPurchase = mapOf(
+              CryptoCurrency.ETH to 100.toBigDecimal()
+          )
+      )
 
-    val coinbaseRepository = object : CoinbaseRepository by stub() {
-      override suspend fun getAccounts() = AccountError(IOException("🏴‍☠️"))
-    }
+      val coinbaseRepository = object : CoinbaseRepository by stub() {
+          override suspend fun getAccounts() = AccountError(IOException("🏴‍☠️"))
+      }
 
-    val classUnderTest = RecurringPurchaseTaskExecutor(
-        config = config,
-        logger = DO_NOTHING_LOGGER,
-        coinbaseRepository = coinbaseRepository
-    )
+      val classUnderTest = RecurringPurchaseTaskExecutor(
+          config = config,
+          logger = DO_NOTHING_LOGGER,
+          coinbaseRepository = coinbaseRepository
+      )
 
-    val result = classUnderTest.getAccountToUse()
-    result shouldEqual null
+      val result = classUnderTest.getAccountToUse()
+      result shouldBeEqualTo null
   }
 
   @Test

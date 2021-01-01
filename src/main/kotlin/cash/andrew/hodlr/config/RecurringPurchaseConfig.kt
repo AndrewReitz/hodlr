@@ -4,7 +4,6 @@ import cash.andrew.hodlr.http.coinbase.model.FiatCurrency
 import cash.andrew.hodlr.util.monthLength
 import java.math.BigDecimal
 import java.time.Clock
-import java.time.Instant
 import java.time.LocalDate
 import java.time.ZonedDateTime
 

@@ -17,7 +17,7 @@ class Accounts : CliktCommand() {
   private val logger: Logger by defaultLazy { component.logger }
   private val shutdownHook: ShutdownHook by defaultLazy { component.shutdownHook }
 
-  override fun run() = runBlocking<Unit> {
+  override fun run() = runBlocking {
     when (val response = coinbaseRepository.getPaymentMethods()) {
       is PaymentSuccess -> {
         if (response.paymentMethods.isEmpty()) {

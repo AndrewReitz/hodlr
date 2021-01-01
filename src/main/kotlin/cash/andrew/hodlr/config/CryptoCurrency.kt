@@ -2,7 +2,7 @@ package cash.andrew.hodlr.config
 
 /**
  * Crypto currencies that are supported by coinbase for purchase
- * with [FiatCurrency].
+ * with [cash.andrew.hodlr.http.coinbase.model.FiatCurrency].
  *
  * Note: Some of these assets are not available in the sandbox. Use
  * `holdr products` to see the list of assets that are actually available

@@ -16,8 +16,6 @@ import cash.andrew.hodlr.stub
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldEqual
-import org.amshove.kluent.shouldEqualTo
 import org.junit.jupiter.api.Test
 import java.io.IOException
 import java.math.BigDecimal
@@ -33,68 +31,68 @@ class RecurringDepositTaskExecutorTest : OutputStreamTest() {
 
   @Test
   fun `should check clock and not run`() = runBlockingTest {
-    val config = RecurringPurchaseConfig(
-        frequency = Frequency.daily,
-        account = "a71ec7ea-8e69-4ef5-921b-f7fda48d4864",
-        currency = FiatCurrency.USD,
-        amount = 100.toBigDecimal(),
-        assetsToPurchase = mapOf(
-            CryptoCurrency.BTC to 100.toBigDecimal()
-        ),
-        clock = Clock.fixed(Instant.ofEpochMilli(10000), ZoneOffset.UTC)
-    )
+      val config = RecurringPurchaseConfig(
+          frequency = Frequency.daily,
+          account = "a71ec7ea-8e69-4ef5-921b-f7fda48d4864",
+          currency = FiatCurrency.USD,
+          amount = 100.toBigDecimal(),
+          assetsToPurchase = mapOf(
+              CryptoCurrency.BTC to 100.toBigDecimal()
+          ),
+          clock = Clock.fixed(Instant.ofEpochMilli(10000), ZoneOffset.UTC)
+      )
 
-    val coinbaseRepository = object : CoinbaseRepository by stub() {}
+      val coinbaseRepository = object : CoinbaseRepository by stub() {}
 
-    val classUnderTest = RecurringDepositTaskExecutor(
-        config = config,
-        coinbaseRepository = coinbaseRepository,
-        logger = DO_NOTHING_LOGGER,
-        clock = object : TestClock() {
-          override fun instant() = Instant.ofEpochMilli(10000)
-        }
-    )
+      val classUnderTest = RecurringDepositTaskExecutor(
+          config = config,
+          coinbaseRepository = coinbaseRepository,
+          logger = DO_NOTHING_LOGGER,
+          clock = object : TestClock() {
+              override fun instant() = Instant.ofEpochMilli(10000)
+          }
+      )
 
-    classUnderTest.shouldRun.shouldEqualTo(false)
+      classUnderTest.shouldRun.shouldBeEqualTo(false)
   }
 
   @Test
   fun `should check clock, run, and update next time check`() = runBlockingTest {
-    val config = RecurringPurchaseConfig(
-        frequency = Frequency.daily,
-        account = "a71ec7ea-8e69-4ef5-921b-f7fda48d4864",
-        currency = FiatCurrency.USD,
-        amount = 100.toBigDecimal(),
-        assetsToPurchase = mapOf(
-            CryptoCurrency.BTC to 100.toBigDecimal()
-        ),
-        clock = object : TestClock() {
-          override fun instant() = Instant.ofEpochMilli(10000)
-        }
-    )
+      val config = RecurringPurchaseConfig(
+          frequency = Frequency.daily,
+          account = "a71ec7ea-8e69-4ef5-921b-f7fda48d4864",
+          currency = FiatCurrency.USD,
+          amount = 100.toBigDecimal(),
+          assetsToPurchase = mapOf(
+              CryptoCurrency.BTC to 100.toBigDecimal()
+          ),
+          clock = object : TestClock() {
+              override fun instant() = Instant.ofEpochMilli(10000)
+          }
+      )
 
-    val coinbaseRepository = object : CoinbaseRepository by stub() {}
+      val coinbaseRepository = object : CoinbaseRepository by stub() {}
 
-    val classUnderTest = RecurringDepositTaskExecutor(
-        config = config,
-        coinbaseRepository = coinbaseRepository,
-        logger = DO_NOTHING_LOGGER,
-        clock = object : TestClock() {
-          // easier to reset the clock used here
-          // rather than the many times it's used in config
-          val instants = LinkedList(
-              listOf(
-                  Instant.ofEpochMilli(86_400_001),
-                  Instant.ofEpochMilli(86_399_999)
+      val classUnderTest = RecurringDepositTaskExecutor(
+          config = config,
+          coinbaseRepository = coinbaseRepository,
+          logger = DO_NOTHING_LOGGER,
+          clock = object : TestClock() {
+              // easier to reset the clock used here
+              // rather than the many times it's used in config
+              val instants = LinkedList(
+                  listOf(
+                      Instant.ofEpochMilli(86_400_001),
+                      Instant.ofEpochMilli(86_399_999)
+                  )
               )
-          )
 
-          override fun instant() = instants.remove()
-        }
-    )
+              override fun instant() = instants.remove()
+          }
+      )
 
-    classUnderTest.shouldRun.shouldEqualTo(true)
-    classUnderTest.shouldRun.shouldEqualTo(false)
+      classUnderTest.shouldRun.shouldBeEqualTo(true)
+      classUnderTest.shouldRun.shouldBeEqualTo(false)
   }
 
   @Test
@@ -110,24 +108,24 @@ class RecurringDepositTaskExecutorTest : OutputStreamTest() {
     )
 
     val coinbaseRepository = object : CoinbaseRepository by stub() {
-      override suspend fun depositFunds(
-          amount: BigDecimal,
-          currency: FiatCurrency,
-          paymentMethodId: String
-      ): DepositResponse {
-        amount shouldEqualTo config.amount
-        currency shouldEqual config.currency
-        paymentMethodId shouldBeEqualTo config.account
+        override suspend fun depositFunds(
+            amount: BigDecimal,
+            currency: FiatCurrency,
+            paymentMethodId: String
+        ): DepositResponse {
+            amount shouldBeEqualTo config.amount
+            currency shouldBeEqualTo config.currency
+            paymentMethodId shouldBeEqualTo config.account
 
-        return DepositSuccess(
-            Deposit(
-                id = "d896b28d-3d08-4b60-9bf9-2f3c5d407331",
-                amount = "100",
-                currency = "BTC",
-                payoutAt = Date.from(Instant.ofEpochMilli(1337))
+            return DepositSuccess(
+                Deposit(
+                    id = "d896b28d-3d08-4b60-9bf9-2f3c5d407331",
+                    amount = "100",
+                    currency = "BTC",
+                    payoutAt = Date.from(Instant.ofEpochMilli(1337))
+                )
             )
-        )
-      }
+        }
     }
 
     val classUnderTest = RecurringDepositTaskExecutor(

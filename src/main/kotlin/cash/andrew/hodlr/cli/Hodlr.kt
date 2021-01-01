@@ -25,7 +25,7 @@ class Hodlr : CliktCommand() {
       ).default(DEFAULT_LOG_LEVEL)
 
   private val config: File by option("--config", help = "Config file to load. Default is hodlr.conf")
-      .file(exists = true, folderOkay = false)
+      .file(mustExist = true, canBeDir = false)
       .default(File("hodlr.conf"))
 
   override fun run() {

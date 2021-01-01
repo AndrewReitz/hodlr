@@ -1,7 +1,7 @@
 = hodlr
 
 A dollar-cost average automation for crypto assets.
-hodlr allows you to set it and for get it with your crypto assets, no need to worry about buying the dip or
+hodlr allows you to set it and forget it with your crypto assets, no need to worry about buying the dip or
 selling at the high point. Just hodl hodl hodl.
 
 Currently hodlr only supports the use of coinbase, but more exchanges could be added in the future. Also, because
@@ -45,7 +45,7 @@ See `sample.conf` for all available options.
 
 == Other information
 
-All scheduled times are meant to happen at midnight the computer it's executing on's time. This may be
+All scheduled times are meant to happen at midnight the computer hodlr's running on. This may be
 changed in the future to be a config option.
 
 Configuration are HOCON files using https://github.com/lightbend/config[TypeSafe config]
@@ -68,11 +68,13 @@ that I didn't expect. You are responsible for your own actions.
 Don't have a Coinbase account? Get one here https://www.coinbase.com/join/reitz_b and
 help support development of this app.
 
+```
 BTC: 38mJrfh1WTHExZYj9FJUuGczudSFfbLEmj
 XMR: 8BcFZwVMSQ78UbQgj5MyMZ5Ty6AoKDJ4QfqweC7B2hqoiwpcq8MmhXd59UWSoxYF3BJc2Yr73GutgJq1VR39SwajCFNepXm
 ETC: 0x1113C9F2D4e773D9ae478b98F009cdC4F286d344
 BAT: 0x275b22E0879FdABfe8b3775B31182a9072D1676A
 USDC: 0xC2a2Ec63F878aF33A0c8F357B7bF670fdc3B2400
+```
 
 == License
 
