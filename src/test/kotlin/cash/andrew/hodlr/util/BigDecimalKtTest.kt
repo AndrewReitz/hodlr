@@ -1,6 +1,6 @@
 package cash.andrew.hodlr.util
 
-import org.amshove.kluent.shouldEqualTo
+import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 
@@ -10,19 +10,19 @@ class BigDecimalKtTest {
 
   @Test
   fun isZero() {
-    0.toBigDecimal().isZero() shouldEqualTo true
-    1.toBigDecimal().isZero() shouldEqualTo false
+    0.toBigDecimal().isZero() shouldBeEqualTo true
+    1.toBigDecimal().isZero() shouldBeEqualTo false
   }
 
   @Test
   fun isNotZero() {
-    0.toBigDecimal().isNotZero() shouldEqualTo false
-    1.toBigDecimal().isNotZero() shouldEqualTo true
+    0.toBigDecimal().isNotZero() shouldBeEqualTo false
+    1.toBigDecimal().isNotZero() shouldBeEqualTo true
   }
 
   @Test
   fun equalsWithCoinbaseScale() {
-    1.0005.toBigDecimal().equalsWithCoinbaseScale(BigDecimal("1.00050000")) shouldEqualTo true
-    1.5.toBigDecimal().equalsWithCoinbaseScale(BigDecimal("1.4")) shouldEqualTo false
+    1.0005.toBigDecimal().equalsWithCoinbaseScale(BigDecimal("1.00050000")) shouldBeEqualTo true
+    1.5.toBigDecimal().equalsWithCoinbaseScale(BigDecimal("1.4")) shouldBeEqualTo false
   }
 }

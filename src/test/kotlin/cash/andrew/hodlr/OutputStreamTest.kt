@@ -14,7 +14,7 @@ abstract class OutputStreamTest {
 
   private val outContent = ByteArrayOutputStream()
   private val originalOut = System.out
-  val errorContent = ByteArrayOutputStream()
+  private val errorContent = ByteArrayOutputStream()
   private val originalError = System.err
 
   val outputText: String get() = outContent.toString().trim()
@@ -34,5 +34,5 @@ abstract class OutputStreamTest {
 
   val config: File get() = file("hodlr.conf")
 
-  fun file(name: String): File = tempDir.resolve(name).toFile()
+  private fun file(name: String): File = tempDir.resolve(name).toFile()
 }

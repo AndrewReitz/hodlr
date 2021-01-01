@@ -2,10 +2,7 @@ package cash.andrew.hodlr.http.coinbase
 
 import cash.andrew.hodlr.config.CoinbaseConfig
 import cash.andrew.hodlr.logging.Logger
-import dagger.Module
 import okio.ByteString.Companion.encodeUtf8
-import javax.inject.Inject
-import javax.inject.Singleton
 
 interface CoinbasePrivateSignatureGenerator {
   fun sign(

@@ -10,7 +10,6 @@ import cash.andrew.hodlr.util.ShutdownHook
 import cash.andrew.hodlr.util.defaultLazy
 import com.github.ajalt.clikt.core.CliktCommand
 import kotlinx.coroutines.runBlocking
-import kotlin.system.exitProcess
 
 class Products: CliktCommand() {
 
@@ -18,7 +17,7 @@ class Products: CliktCommand() {
   private val logger: Logger by defaultLazy { component.logger }
   private val shutdownHook: ShutdownHook by defaultLazy { component.shutdownHook }
 
-  override fun run() = runBlocking<Unit> {
+  override fun run() = runBlocking {
     when (val response = coinbaseRepository.getProducts()) {
       is ProductSuccess -> {
         response.products.forEach {

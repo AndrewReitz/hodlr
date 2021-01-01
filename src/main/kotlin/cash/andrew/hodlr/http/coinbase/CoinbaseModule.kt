@@ -33,7 +33,7 @@ class CoinbaseModule {
   @Provides
   @Singleton
   @Coinbase
-  fun provideRetrofit(@Coinbase url: HttpUrl, client: OkHttpClient, moshi: Moshi) = Retrofit.Builder()
+  fun provideRetrofit(@Coinbase url: HttpUrl, client: OkHttpClient, moshi: Moshi): Retrofit = Retrofit.Builder()
       .client(client)
       .baseUrl(url)
       .addConverterFactory(MoshiConverterFactory.create(moshi))
@@ -63,7 +63,7 @@ class CoinbaseModule {
 
   @Provides
   @Singleton
-  fun provideCoinbaseProPrivateService(@CoinbasePrivate retrofit: Retrofit) =
+  fun provideCoinbaseProPrivateService(@CoinbasePrivate retrofit: Retrofit): CoinbaseProPrivateService =
       retrofit.create(CoinbaseProPrivateService::class.java)
 
   @Provides

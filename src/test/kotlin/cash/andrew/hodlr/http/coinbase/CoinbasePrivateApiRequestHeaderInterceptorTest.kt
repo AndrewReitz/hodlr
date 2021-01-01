@@ -8,7 +8,7 @@ import okhttp3.Interceptor
 import okhttp3.Protocol
 import okhttp3.Request
 import okhttp3.Response
-import org.amshove.kluent.shouldEqual
+import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import java.time.Instant
 
@@ -19,10 +19,10 @@ class CoinbasePrivateApiRequestHeaderInterceptorTest {
     val response = classUnderTest.intercept(testChain)
 
     with(response.request) {
-      header("CB-ACCESS-KEY") shouldEqual config.key.asString()
-      header("CB-ACCESS-SIGN") shouldEqual "signature"
-      header("CB-ACCESS-TIMESTAMP") shouldEqual "9001"
-      header("CB-ACCESS-PASSPHRASE") shouldEqual config.passphrase.asString()
+        header("CB-ACCESS-KEY") shouldBeEqualTo config.key.asString()
+        header("CB-ACCESS-SIGN") shouldBeEqualTo "signature"
+        header("CB-ACCESS-TIMESTAMP") shouldBeEqualTo "9001"
+        header("CB-ACCESS-PASSPHRASE") shouldBeEqualTo config.passphrase.asString()
     }
   }
 
